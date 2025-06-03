@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Settings, User, Bell, Shield, Palette, Upload, Save, Trash2 } from 'lucide-react';
+import { useTheme } from "@/hooks/useTheme";
 
 interface ProfileSettingsProps { }
 
@@ -161,13 +163,9 @@ const DataManagementSettings: React.FC<DataManagementSettingsProps> = () => {
   );
 };
 
-interface SettingsPageProps {
-  currentTheme: 'light' | 'dark' | 'system';
-  onThemeChange: (theme: 'light' | 'dark' | 'system') => void;
-}
-
-const SettingsPage: React.FC<SettingsPageProps> = ({ currentTheme, onThemeChange }) => {
+const SettingsPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState('profile');
+  const { theme, setTheme } = useTheme();
 
   return (
     <div>
@@ -221,7 +219,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ currentTheme, onThemeChange
           <SecuritySettings />
         </TabsContent>
         <TabsContent value="appearance">
-          <AppearanceSettings currentTheme={currentTheme} onThemeChange={onThemeChange} />
+          <AppearanceSettings currentTheme={theme} onThemeChange={setTheme} />
         </TabsContent>
         <TabsContent value="data">
           <DataManagementSettings />
