@@ -1,32 +1,14 @@
-
-import { useState } from "react";
-import { Plus, Search, Edit, Trash2, Car } from "lucide-react";
+import React, { useState } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
+import { Car, Plus, Edit, Trash2, Search } from 'lucide-react';
 
 interface Vehicle {
   id: string;
@@ -39,6 +21,18 @@ interface Vehicle {
   currentKm: number;
   clientName: string;
   additionalInfo?: string;
+}
+
+interface VehicleFormData {
+  plate: string;
+  chassis: string;
+  year: number;
+  manufacturer: string;
+  model: string;
+  color: string;
+  currentKm: number;
+  clientName: string;
+  additionalInfo: string;
 }
 
 const mockVehicles: Vehicle[] = [
@@ -77,21 +71,22 @@ const models = {
   Hyundai: ["HB20", "Elantra", "Tucson", "Creta"],
 };
 
-export default function Vehicles() {
+const Vehicles = () => {
   const [vehicles, setVehicles] = useState<Vehicle[]>(mockVehicles);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingVehicle, setEditingVehicle] = useState<Vehicle | null>(null);
-  const [formData, setFormData] = useState({
-    plate: "",
-    chassis: "",
+  
+  const [formData, setFormData] = useState<VehicleFormData>({
+    plate: '',
+    chassis: '',
     year: new Date().getFullYear(),
-    manufacturer: "",
-    model: "",
-    color: "",
+    manufacturer: '',
+    model: '',
+    color: '',
     currentKm: 0,
-    clientName: "",
-    additionalInfo: "",
+    clientName: '',
+    additionalInfo: ''
   });
 
   const filteredVehicles = vehicles.filter(
@@ -104,37 +99,53 @@ export default function Vehicles() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
     if (editingVehicle) {
-      setVehicles(vehicles.map(v => v.id === editingVehicle.id ? { ...formData, id: editingVehicle.id } : v));
+      setVehicles(vehicles.map(v => 
+        v.id === editingVehicle.id 
+          ? { ...editingVehicle, ...formData }
+          : v
+      ));
     } else {
       const newVehicle: Vehicle = {
-        ...formData,
         id: Date.now().toString(),
+        ...formData
       };
       setVehicles([...vehicles, newVehicle]);
     }
+    
+    setIsDialogOpen(false);
+    setEditingVehicle(null);
     resetForm();
   };
 
   const resetForm = () => {
     setFormData({
-      plate: "",
-      chassis: "",
+      plate: '',
+      chassis: '',
       year: new Date().getFullYear(),
-      manufacturer: "",
-      model: "",
-      color: "",
+      manufacturer: '',
+      model: '',
+      color: '',
       currentKm: 0,
-      clientName: "",
-      additionalInfo: "",
+      clientName: '',
+      additionalInfo: ''
     });
-    setEditingVehicle(null);
-    setIsDialogOpen(false);
   };
 
   const handleEdit = (vehicle: Vehicle) => {
-    setFormData(vehicle);
     setEditingVehicle(vehicle);
+    setFormData({
+      plate: vehicle.plate,
+      chassis: vehicle.chassis,
+      year: vehicle.year,
+      manufacturer: vehicle.manufacturer,
+      model: vehicle.model,
+      color: vehicle.color,
+      currentKm: vehicle.currentKm,
+      clientName: vehicle.clientName,
+      additionalInfo: vehicle.additionalInfo || ''
+    });
     setIsDialogOpen(true);
   };
 
@@ -272,7 +283,7 @@ export default function Vehicles() {
 
               <div>
                 <Label htmlFor="additionalInfo">Informações Adicionais</Label>
-                <Input
+                <Textarea
                   id="additionalInfo"
                   value={formData.additionalInfo}
                   onChange={(e) => setFormData({ ...formData, additionalInfo: e.target.value })}
@@ -359,4 +370,6 @@ export default function Vehicles() {
       </Card>
     </div>
   );
-}
+};
+
+export default Vehicles;
