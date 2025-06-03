@@ -8,7 +8,9 @@ import { ThemeProvider } from "@/hooks/useTheme";
 import { Layout } from "@/components/Layout";
 import Dashboard from "./pages/Dashboard";
 import Clients from "./pages/Clients";
+import ClientVehicles from "./pages/ClientVehicles";
 import Vehicles from "./pages/Vehicles";
+import VehicleOrders from "./pages/VehicleOrders";
 import Orders from "./pages/Orders";
 import Inventory from "./pages/Inventory";
 import Financial from "./pages/Financial";
@@ -29,7 +31,9 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/clients" element={<Clients />} />
+              <Route path="/clients/:clientId/vehicles" element={<ClientVehicles />} />
               <Route path="/vehicles" element={<Vehicles />} />
+              <Route path="/vehicles/:vehicleId/orders" element={<VehicleOrders />} />
               <Route path="/orders" element={<Orders />} />
               <Route path="/inventory" element={<Inventory />} />
               <Route path="/financial" element={<Financial />} />

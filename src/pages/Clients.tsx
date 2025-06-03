@@ -1,5 +1,5 @@
-
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { 
@@ -19,7 +19,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Plus, Search, Phone, Mail, MapPin } from "lucide-react";
+import { Plus, Search, Phone, Mail, MapPin, Car } from "lucide-react";
 
 const mockClients = [
   {
@@ -47,12 +47,17 @@ const mockClients = [
 export default function Clients() {
   const [searchTerm, setSearchTerm] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const navigate = useNavigate();
 
   const filteredClients = mockClients.filter(client =>
     client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     client.cpf.includes(searchTerm) ||
     client.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const handleViewVehicles = (clientId: number, clientName: string) => {
+    navigate(`/clients/${clientId}/vehicles?name=${encodeURIComponent(clientName)}`);
+  };
 
   return (
     <div className="space-y-6">
@@ -193,7 +198,12 @@ export default function Clients() {
                       <Button variant="outline" size="sm">
                         Editar
                       </Button>
-                      <Button variant="outline" size="sm">
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => handleViewVehicles(client.id, client.name)}
+                      >
+                        <Car className="h-4 w-4 mr-1" />
                         Veículos
                       </Button>
                     </div>

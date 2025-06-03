@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Car, Plus, Edit, Trash2, Search } from 'lucide-react';
+import { Car, Plus, Edit, Trash2, Search, FileText } from 'lucide-react';
 
 interface Vehicle {
   id: string;
@@ -76,6 +77,7 @@ const Vehicles = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingVehicle, setEditingVehicle] = useState<Vehicle | null>(null);
+  const navigate = useNavigate();
   
   const [formData, setFormData] = useState<VehicleFormData>({
     plate: '',
@@ -96,6 +98,10 @@ const Vehicles = () => {
       vehicle.manufacturer.toLowerCase().includes(searchTerm.toLowerCase()) ||
       vehicle.model.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const handleViewOrders = (vehicleId: string, vehicleName: string, plate: string) => {
+    navigate(`/vehicles/${vehicleId}/orders?name=${encodeURIComponent(vehicleName)}&plate=${plate}`);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -346,6 +352,14 @@ const Vehicles = () => {
                   <TableCell>{vehicle.currentKm.toLocaleString()} km</TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleViewOrders(vehicle.id, `${vehicle.manufacturer} ${vehicle.model}`, vehicle.plate)}
+                        title="Ver ordens de serviço"
+                      >
+                        <FileText className="w-4 h-4" />
+                      </Button>
                       <Button
                         variant="ghost"
                         size="sm"
