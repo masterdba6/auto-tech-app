@@ -5,6 +5,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/hooks/useTheme";
+import { AuthProvider } from "@/contexts/AuthContext";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Layout } from "@/components/Layout";
 import Dashboard from "./pages/Dashboard";
 import Clients from "./pages/Clients";
@@ -16,6 +18,7 @@ import Inventory from "./pages/Inventory";
 import Financial from "./pages/Financial";
 import Reports from "./pages/Reports";
 import Settings from "./pages/Settings";
+import CreateUser from "./pages/CreateUser";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -23,27 +26,32 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider defaultTheme="light" storageKey="workshop-theme">
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Layout>
-            <Routes>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/clients" element={<Clients />} />
-              <Route path="/clients/:clientId/vehicles" element={<ClientVehicles />} />
-              <Route path="/vehicles" element={<Vehicles />} />
-              <Route path="/vehicles/:vehicleId/orders" element={<VehicleOrders />} />
-              <Route path="/orders" element={<Orders />} />
-              <Route path="/inventory" element={<Inventory />} />
-              <Route path="/financial" element={<Financial />} />
-              <Route path="/reports" element={<Reports />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Layout>
-        </BrowserRouter>
-      </TooltipProvider>
+      <AuthProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <ProtectedRoute>
+              <Layout>
+                <Routes>
+                  <Route path="/" element={<Dashboard />} />
+                  <Route path="/clients" element={<Clients />} />
+                  <Route path="/clients/:clientId/vehicles" element={<ClientVehicles />} />
+                  <Route path="/vehicles" element={<Vehicles />} />
+                  <Route path="/vehicles/:vehicleId/orders" element={<VehicleOrders />} />
+                  <Route path="/orders" element={<Orders />} />
+                  <Route path="/inventory" element={<Inventory />} />
+                  <Route path="/financial" element={<Financial />} />
+                  <Route path="/reports" element={<Reports />} />
+                  <Route path="/settings" element={<Settings />} />
+                  <Route path="/create-user" element={<CreateUser />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </Layout>
+            </ProtectedRoute>
+          </BrowserRouter>
+        </TooltipProvider>
+      </AuthProvider>
     </ThemeProvider>
   </QueryClientProvider>
 );

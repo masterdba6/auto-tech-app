@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,8 +9,10 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { Settings, User, Bell, Shield, Palette, Upload, Save, Trash2 } from 'lucide-react';
+import { Settings, User, Bell, Shield, Palette, Upload, Save, Trash2, Users } from 'lucide-react';
 import { useTheme } from "@/hooks/useTheme";
+import { useAuth } from '@/contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 interface ProfileSettingsProps { }
 
@@ -163,9 +164,50 @@ const DataManagementSettings: React.FC<DataManagementSettingsProps> = () => {
   );
 };
 
+const UserManagementSettings: React.FC = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  if (user?.role !== 'Gerente') {
+    return null;
+  }
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Gerenciar Usuários</CardTitle>
+        <CardDescription>Criar e gerenciar usuários do sistema.</CardDescription>
+      </CardHeader>
+      <CardContent className="grid gap-6">
+        <div className="flex items-center justify-between rounded-md border p-4">
+          <div className="space-y-1">
+            <p className="text-sm font-medium leading-none">Criar Novo Usuário</p>
+            <p className="text-sm text-muted-foreground">Adicionar um novo usuário ao sistema da sua empresa.</p>
+          </div>
+          <Button onClick={() => navigate('/create-user')}>
+            <User className="mr-2 h-4 w-4" />
+            Criar Usuário
+          </Button>
+        </div>
+        <div className="flex items-center justify-between rounded-md border p-4">
+          <div className="space-y-1">
+            <p className="text-sm font-medium leading-none">Gerenciar Usuários</p>
+            <p className="text-sm text-muted-foreground">Visualizar e editar usuários existentes.</p>
+          </div>
+          <Button variant="outline">
+            <Users className="mr-2 h-4 w-4" />
+            Ver Usuários
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
 const SettingsPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState('profile');
   const { theme, setTheme } = useTheme();
+  const { user } = useAuth();
 
   return (
     <div>
@@ -179,6 +221,9 @@ const SettingsPage: React.FC = () => {
             <SelectItem value="notifications">Notifications</SelectItem>
             <SelectItem value="security">Security</SelectItem>
             <SelectItem value="appearance">Appearance</SelectItem>
+            {user?.role === 'Gerente' && (
+              <SelectItem value="users">Usuários</SelectItem>
+            )}
             <SelectItem value="data">Data Management</SelectItem>
           </SelectContent>
         </Select>
@@ -202,6 +247,12 @@ const SettingsPage: React.FC = () => {
               <Palette className="mr-2 h-4 w-4" />
               Appearance
             </TabsTrigger>
+            {user?.role === 'Gerente' && (
+              <TabsTrigger value="users">
+                <Users className="mr-2 h-4 w-4" />
+                Usuários
+              </TabsTrigger>
+            )}
             <TabsTrigger value="data">
               <Upload className="mr-2 h-4 w-4" />
               Data Management
@@ -221,6 +272,11 @@ const SettingsPage: React.FC = () => {
         <TabsContent value="appearance">
           <AppearanceSettings currentTheme={theme} onThemeChange={setTheme} />
         </TabsContent>
+        {user?.role === 'Gerente' && (
+          <TabsContent value="users">
+            <UserManagementSettings />
+          </TabsContent>
+        )}
         <TabsContent value="data">
           <DataManagementSettings />
         </TabsContent>
