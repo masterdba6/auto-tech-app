@@ -18,6 +18,7 @@ import Inventory from "./pages/Inventory";
 import Financial from "./pages/Financial";
 import Reports from "./pages/Reports";
 import Settings from "./pages/Settings";
+import Subscription from "./pages/Subscription";
 import CreateUser from "./pages/CreateUser";
 import NotFound from "./pages/NotFound";
 
@@ -44,6 +45,7 @@ const App = () => (
                   <Route path="/financial" element={<Financial />} />
                   <Route path="/reports" element={<Reports />} />
                   <Route path="/settings" element={<Settings />} />
+                  <Route path="/subscription" element={<Subscription />} />
                   <Route path="/create-user" element={<CreateUser />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
