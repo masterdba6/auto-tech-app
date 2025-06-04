@@ -9,10 +9,11 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { Settings, User, Bell, Shield, Palette, Upload, Save, Trash2, Users } from 'lucide-react';
+import { Settings, User, Bell, Shield, Palette, Upload, Save, Trash2, Users, Car } from 'lucide-react';
 import { useTheme } from "@/hooks/useTheme";
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { VehicleManagement } from '@/components/VehicleManagement';
 
 interface ProfileSettingsProps { }
 
@@ -222,7 +223,10 @@ const SettingsPage: React.FC = () => {
             <SelectItem value="security">Security</SelectItem>
             <SelectItem value="appearance">Appearance</SelectItem>
             {user?.role === 'Gerente' && (
-              <SelectItem value="users">Usuários</SelectItem>
+              <>
+                <SelectItem value="users">Usuários</SelectItem>
+                <SelectItem value="vehicles">Veículos</SelectItem>
+              </>
             )}
             <SelectItem value="data">Data Management</SelectItem>
           </SelectContent>
@@ -248,10 +252,16 @@ const SettingsPage: React.FC = () => {
               Appearance
             </TabsTrigger>
             {user?.role === 'Gerente' && (
-              <TabsTrigger value="users">
-                <Users className="mr-2 h-4 w-4" />
-                Usuários
-              </TabsTrigger>
+              <>
+                <TabsTrigger value="users">
+                  <Users className="mr-2 h-4 w-4" />
+                  Usuários
+                </TabsTrigger>
+                <TabsTrigger value="vehicles">
+                  <Car className="mr-2 h-4 w-4" />
+                  Veículos
+                </TabsTrigger>
+              </>
             )}
             <TabsTrigger value="data">
               <Upload className="mr-2 h-4 w-4" />
@@ -273,9 +283,14 @@ const SettingsPage: React.FC = () => {
           <AppearanceSettings currentTheme={theme} onThemeChange={setTheme} />
         </TabsContent>
         {user?.role === 'Gerente' && (
-          <TabsContent value="users">
-            <UserManagementSettings />
-          </TabsContent>
+          <>
+            <TabsContent value="users">
+              <UserManagementSettings />
+            </TabsContent>
+            <TabsContent value="vehicles">
+              <VehicleManagement />
+            </TabsContent>
+          </>
         )}
         <TabsContent value="data">
           <DataManagementSettings />
